@@ -47,7 +47,8 @@
 \newcommand{\ei}{\end{itemize}}
 
 \begin{document}
-\title{Neural Networks: A Concise Overview}
+\title{Notes on Machine Learning \& Deep Learning}
+\author{Ara Patapoutian, 2017}
 \maketitle
 
 
@@ -506,6 +507,10 @@
             \beq\label{sigmoid}
                 \theta_L(s) \triangleq \frac{e^s}{1+e^s} = \frac{1}{1+e^{-\bm{w}^T \bm{x}}}
             \eeq
+            \item the derivative is
+            \beq
+                 \dot{\theta}_L(s) =  \theta_L(s) \, (1- \theta_L(s))
+            \eeq
             \item $\theta_L(s) \geq 0 \Rightarrow x_i \geq 0$, (i.e. not centered around zero) implies the changes of $w_i$, due to gradient, are all positive or negative, see sub-section \ref{stochastic_sec}
             \item furthermore, saturated regions have no gradient information
             \item useful for gating functions
@@ -850,6 +855,7 @@
     \ei
 \end{itemize}
 
+\newpage
 %--------------------- Generalization -------------------
 \section{Generalization\label{gen_section}}
 \begin{itemize}
@@ -1185,7 +1191,7 @@
     \ei
 \end{itemize}
 
-
+\newpage
 \section{Feedforward Networks with Supervision\label{fnn_section}}
 \begin{itemize}
     \item Historical overview:
@@ -1601,7 +1607,7 @@
         \ei
         \item the weights and biases learned for a given output layer are shared across all patches in a given input layer
     \ei
-    \item Plurality of features:
+    \item Filter Depth:
     \bi
       \item in many visual applications, data at each layer is presented in $3$-dimensions $(H \times W \times F)$
       \bi
@@ -1609,11 +1615,11 @@
             \item for input layer, the feature set could be the three primary colors
             \item for hidden layers, multiple feature maps are usually extracted using multiple filter banks
       \ei
-      \item consider the convolutional layer connection
+      \item for example, consider the convolutional layer connection
       \beq\label{filter_size}\begin{CD}
             (H \times W \times F_1) @>F_2 \times (3\times 3 \times F_1)>>  (H \times W \times F_2)
       \end{CD}\eeq
-      where each filter has $3\times 3 \times F_1$ inputs, \& for each location on the output layer there are $F_2$ filters
+      where each filter has $3\times 3 \times F_1$ local receptive field, \& for each location on the output layer there are $F_2$ filters
       \item $F_1$ \& $F_2$ refer to the feature sets at first and second layers
     \ei
     \item Convolutional layer:
@@ -1630,10 +1636,11 @@
     \bi
         \item recently, multiple layers of smaller sized filters are chosen over a single layer of larger sized filters
         \bi
+            \item $(1 \times 1 \times F)$ layers
             \item such architectures, in general, use less memory, are more computationally efficient, \& provide more non-linearities
         \ei
+        \item a FC layer with $n$ output elements is equivalent to a  $(1 \times 1 \times n)$ layer
         \item can factor $(n \times n)$ convolutions into $(1 \times n)$  \& $(n \times 1)$
-        \item in the extreme, can have $(1 \times 1 \times F)$ layers
     \ei
     \item Example on filter size tradeoffs: a bottleneck architecture
     \bi
@@ -1648,10 +1655,14 @@
             \item finally, original layer size $(H \times W \times F)$  is restored using $F$  $(1 \times 1 \times F/2)$ filters
         \ei
     \ei
-    \item Filter implementation:
+    \item Transposed convolution layer: asd
     \bi
-        \item \emph{im2col}: convert both the input and weights into matrices, so that a layer update reduces to matrix multiplication
-        \item alternatively, for large filters, can use FFT
+        \item \emph{transposed convolution} helps in upsampling the previous layer to a higher resolution or dimension, see Section \ref{vision_nn_section}
+        \item the term transpose means to transfer to a different place or context
+        \bi
+            \item use a transposed convolution to transfer patches of data onto a sparse matrix
+            \item then can fill the sparse area of the matrix based on the transferred information
+        \ei
     \ei
     \item Super-parameters needed for convolutional layer:
     \begin{enumerate}
@@ -1750,7 +1761,7 @@
   \end{itemize}
 
 
-\subsection{Transfer Learning}
+\subsection{Transfer Learning\label{tl_sect}}
 \begin{itemize}
     \item \emph{Transfer learning} involves taking a pre-trained neural network and re-adapting it to a new, different data set
     \item Approaches to transfer learning:
@@ -1815,7 +1826,7 @@
             \item it features a homogeneous architecture that only performs $(3 \times 3)$ convolutions with $(2 \times 2)$ pooling layers, followed by three layers of FC layers
             \item known to be a flexible network
             \item but it is expensive to evaluate and uses a lot more memory and parameters (140M)
-            \item $19$ total layers
+            \item VGG16 is the $16$ layer version, while VGG19 has $19$ layers
         \ei
         \item ResNet \cite{he2016a}
         \bi
@@ -1831,6 +1842,7 @@
     \end{enumerate}
 \end{itemize}
 
+\newpage
 %---------------------- RNN -------------------
 \section{Recurrent Neural Networks with Supervision\label{rnn_section}}
 \begin{itemize}
@@ -1991,7 +2003,8 @@
     \item Recursive neural networks are covered in Section \ref{nlp_section}.
 \end{itemize}
 
-
+\newpage
+%----------------------------------------------------------
 \section{Unsupervised Learning\label{unsupervised_section}}
 \begin{itemize}
     \item Unsupervised learning:
@@ -2138,6 +2151,8 @@
     \ei
 \end{itemize}
 
+\newpage
+%---------------------------------------
 \section{Applications\label{app_section}}
 \begin{itemize}
     \item Andrew Ng: AI is the new electricity
@@ -2195,7 +2210,7 @@
 \begin{itemize}
      \item Generalities:
     \bi
-    \item vision recognition is also known as \emph{image perception}, \emph{machine vision}, or \emph{computer vision}
+    \item vision recognition is also known as \emph{image perception}, \emph{machine vision}, \emph{scene understanding} or \emph{computer vision}
         \item computer vision enables computers to see, identify and process images in the same way that human vision does, and then provide appropriate output
         \bi
             \item the goal of computer vision is to extract useful information from an image
@@ -2240,7 +2255,14 @@
             \item sometimes referred to as \emph{bounding-box regression}
         \ei
         \item can be approached as a regression problem, where the metric is the L2 distance between estimated box and ideal box coordinates
-        \item metric can also be generated as the intersection of box and object, divided by their union
+        \item FC layers do not preserve spatial information, while convolutional layers do
+    \ei
+    \item IoU:
+    \bi
+        \item intersection over union, or IoU, is a metric used to measure performance of localization and segmentation problems
+        \item IoU is a number between zero and one, with higher IoU's implying better performance
+        \item for localization, IoU is the intersection of the box and the object, divided by their union
+        \item for segmentation, IoU is the intersection of the reference and classified pixels in a given class, divided by their union
     \ei
     \item Localization of $K$ objects:
     \bi
@@ -2538,7 +2560,7 @@
 \end{itemize}
 
 
-\subsection{Vision with legacy machine learning}
+\subsection{Vision with legacy machine learning\label{vision_nn_section}}
 \begin{itemize}
     \item Features:
     \bi
@@ -2585,7 +2607,7 @@
         \item \emph{deformable parts model} (DPM), from $2010$, is based on HOG but uses more more complex functions than linear classifier
         \item DPM was state of the art before CNNs
     \ei
-    \item Sliding window \& Overfeat:
+    \item Sliding window:
     \bi
         \item so far feature extraction and classification was performed on a single window on a larger image
         \item to be able to do detection, run classification at multiple locations \& scales on a high resolution image
@@ -2603,13 +2625,11 @@
 \begin{itemize}
     \item Classification and localization with CNN:
     \bi
-        \item the corresponding CNN network is the union of some CNN for classification, with a second FC \emph{regression-head}, appended to the network, at the top
-        \bi
-            \item the resulting CNN will have two heads, a \emph{classification-head} and a regression-head
-            \item the regression head gets its input either from the final convolutional layer, or after last FC layer
-            \item the regression head is trained separately
-            \item localization can be class agnostic, with $4$ coordinate numbers, or class specific, with $4C$ numbers
-        \ei
+        \item the network is the union of some CNN for classification, with a second FC \emph{regression-head}, appended to the network, at the top
+        \item the resulting CNN will have two heads, a \emph{classification-head} and a regression-head
+        \item the regression head gets its input either from the final convolutional layer, or after last FC layer
+        \item the regression head is trained separately
+        \item localization can be class agnostic, with $4$ coordinate numbers, or class specific, with $4\,C$ numbers
     \ei
     \item Detection as classification:
     \bi
@@ -2670,14 +2690,27 @@
         \ei
         \item results were further improved by using faster R-CNN with ResNet \cite{he2015}
     \ei
+    \item YOLO:
+    \bi
+        \item You only look once (YOLO) is a state-of-the-art, real-time object detection system
+    \ei
+    \item SSD:
+    \bi
+        \item Single Shot MultiBox Detector, or SSD, is a method for detecting objects in images using a single deep neural network
+    \ei
     \item Image segmentation:
     \bi
+        \item bounding boxes are not practical for some objects such as curvy roads, a forest or a sky
+        \bi
+            \item bounding boxes achieve partial scene understanding
+        \ei
         \item image segmentation aims to group perceptually similar pixels into regions and is a fundamental problem in computer vision
         \item two segmentation types:
         \begin{enumerate}
             \item semantic segmentation
             \item instance segmentation
         \end{enumerate}
+        \item image segmentation is part of scene understanding
     \ei
     \item Semantic segmentation:
     \bi
@@ -2689,7 +2722,7 @@
     \bi
         \item semantic segmentation can be performed by extracting patches, performing patch classification, and by labeling the patch center-pixel by that object
         \bi
-            \item this method is straight forward but tedious and expensive
+            \item this brute-force method is straight forward but tedious and expensive
         \ei
         \item similar to detection (R-CNN), can run CNN on the whole image once, and then pick patches from higher layers
         \item \emph{refinement} combines CNN and recurrence by using raw image and output of previous iteration as inputs for next iteration
@@ -2700,13 +2733,46 @@
         \bi
             \item upsampling is the opposite of downsampling that occurs in generic CNNs
         \ei
-        \item upsampling can be generated using by a union of inner layers using skipping
+        \item upsampling can be generated using a union of inner layers using skipping
         \item another approach is to use convolution type technique, where a filter will take a single input and will copy it to all $(n \times n)$ output values, each scaled by some filter weight $w_{ij}$
         \bi
             \item a stride length of $>1$ is used, at the output rather than the input
             \item overlapping outputs, from multiple filters, sum their values
         \ei
         \item sometimes referred to as \emph{backward strided convolution}
+    \ei
+    \item FCN:
+    \bi
+        \item a network constructed exclusively from convolutional layers is called \emph{fully convolutional network}, or FCN
+        \bi
+            \item locality is preserved in such networks \& is used in semantic segmentation
+        \ei
+        \item characteristics of FCNs:
+        \begin{enumerate}
+            \item replace FC layers with $(1 \times 1 \times F)$
+            \item upsampling through the use of transposed convolutional layers
+            \item uses skip connections for better segmentation
+        \end{enumerate}
+        \item an FCN is comprised of two parts: encoder \& decoder, see Section \ref{rnn_section}
+        \bi
+            \item encoder:
+            \bi
+                \item the goal of encoder is to extract features from image
+                \item transfer learning is usually used, where the encoder can be one of the available CNN networks such as VGG16, see Section \ref{tl_sect}
+               \item the last layer of encoder is $(1 \times 1 \times F)$ layer
+            \ei
+            \item decoder:
+            \bi
+                \item the decoder upscales the encoder output back to the original size of image
+                \item decoder uses transposed convolutional layers
+            \ei
+        \ei
+    \ei
+    \item FCN-8:
+    \bi
+        \item an implementation of FCN from Berkeley
+        \item the encoder for FCN-8 is the VGG16 model pretrained on ImageNet for classification
+        \item the fully-connected layers are replaced by 1-by-1 convolutions
     \ei
     \item Instance segmentation:
     \bi
@@ -2816,6 +2882,7 @@
     \ei
 \end{itemize}
 
+\newpage
 %---------------------- Natural Language Processing -------------------
 \section{Natural language processing\label{nlp_section}}
 \begin{itemize}
@@ -3189,7 +3256,7 @@
 \end{itemize}
 
 
-
+\newpage
 %---------------------- Tools -------------------
 \section{Tools\label{tools_section}}
 \begin{itemize}
@@ -3395,7 +3462,7 @@
 \end{itemize}
 
 
-
+\newpage
 %--------------------- VC Generalization -------------------
 \section{VC Generalization Bound\label{vc_section}}
 \begin{itemize}
@@ -3507,7 +3574,7 @@
     \ei
 \end{itemize}
 
-
+\newpage
 \section{Bias \& Variance Method\label{bv_section}}
 \begin{itemize}
     \item Average hypothesis:
@@ -3562,7 +3629,7 @@
 \end{itemize}
 
 
-
+\newpage
 %---------------------- Support Vector Machines -------------------
 \section{SVM's \& Kernel Methods\label{svm_sec}}
 \begin{itemize}
@@ -3816,6 +3883,7 @@
     \ei
 \end{itemize}
 
+\newpage
 %---------------------- Similarity Methods -------------------
 \section{Similarity Methods}
 \begin{itemize}
@@ -3915,7 +3983,7 @@
     \ei
 \end{itemize}
 
-
+\newpage
 \section{Miscellaneous Mathematical Entities\label{math_section}}
 \begin{itemize}
     \item Singular value decomposition:
@@ -4055,7 +4123,7 @@
     \item Naive Bayes model:
     \bi
         \item \emph{Naive Bayes model} is a subclass of Bayesian Network, BN, that makes "naive assumptions"
-        \item often used in classification, where given feature observations $X_1, X_2, \cdots, X_n$ per sample, the model \emph{inferences} the class $C$
+        \item often used in classification problems, where given feature observations $X_1, X_2, \cdots, X_n$ per sample, the model \emph{inferences} the class $C$
         \item analytically:
         \beq\begin{split}
             & \forall \, i,j\neq i, \; (X_i \perp X_j \;|\; C) \Rightarrow\\
@@ -4217,12 +4285,11 @@
 %    \ei
 %\end{itemize}
 
-
+\newpage
 \small
 \bibliographystyle{ieeetr}
 \bibliography{dl}
 \normalsize
-
 \printindex
 %\end{appendices}
 \end{document}
